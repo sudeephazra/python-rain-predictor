@@ -13,12 +13,13 @@ import matplotlib.pyplot as plt
 # 5. Apply algorithm and predict
 
 # 1. Read data file
-data = pandas.read_csv('../data/Weather Dataset_Filtered.csv', header=0)
+data = pandas.read_csv('../data/Weather Dataset_Filtered.csv', header=0, usecols=[8, 10, 15])
 data = data.dropna()
-print(data.shape)
+# print(data.shape)
 # print(list(data.columns))
 # 2. Select specific columns only
-data_cleansed = data[['WeatherType', 'DryBulbCelsius', 'RelativeHumidity']]
+# data_cleansed = data[['WeatherType', 'DryBulbCelsius', 'RelativeHumidity']]
+data_cleansed = data
 # 3. Rename column headers as required
 data_cleansed.columns = ['isRain', 'temperature', 'humidity']
 # 4. Replace values if required
@@ -38,11 +39,11 @@ X_train, X_test, y_train, y_test = train_test_split(data_cleansed[['humidity']+[
 logistic = LogisticRegression(solver='lbfgs')
 logistic.fit(X_train, y_train.values.ravel())
 predict = logistic.predict(X_test)
-# print(y_test)
+# print(X_test)
 cm1 = confusion_matrix(y_test, predict)
-print(cm1)
-
-print('Accuracy of logistic regression classifier on test set: {:.2f}'.format(logistic.score(X_test, y_test)))
+# print(cm1)
+print(logistic.predict([[24.4, 90]]))
+# print('Accuracy of logistic regression classifier on test set: {:.2f}'.format(logistic.score(X_test, y_test)))
 #
 # # Display the plot
 plt.rc("font", size=14)
@@ -52,7 +53,7 @@ plt.figure(figsize=(6, 6))
 sns.heatmap(cm1, annot=True, fmt=".3f", linewidths=.5, square = True, cmap = 'Blues_r')
 plt.ylabel('True label')
 plt.xlabel('Predicted label')
-plt.show()
+# plt.show()
 
 
 
