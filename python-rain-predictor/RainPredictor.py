@@ -1,6 +1,9 @@
 import pandas
 import seaborn as sns
 import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import confusion_matrix
 
 
 class RainPredictor:
@@ -10,7 +13,7 @@ class RainPredictor:
         pandas.options.mode.chained_assignment = None
 
     def read_file(self, column_indices, headers=0):
-        data_frame = pandas.read_csv(self.data_file, header=headers, usecols=column_indices)
+        data_frame = pandas.read_csv(self.data_file, header=headers, usecols=column_indices) # column_indices should default to all columns
         return data_frame
 
     def rename_columns(self, data_frame, column_names):
@@ -21,6 +24,18 @@ class RainPredictor:
         data_frame[column_name].replace(to_replace=old_string, value=new_string, regex=True, inplace=True)
         return data_frame
 
+    def prediction_logic(self, x_dataframe, y_dataframe):
+        x_train, x_test, y_train, y_test = train_test_split(x_dataframe,
+                                                            y_dataframe, random_state=0, test_size=0.25)
+        logistic = LogisticRegression(solver='lbfgs')
+        logistic.fit(x_train, y_train.values.ravel())
+        return logistic, x_test, y_test
+
+    def get_confusion_matrix(self, logistic, x_test, y_test):
+        predict = logistic.predict(x_test)
+        c_matrix = confusion_matrix(y_test, predict)
+        return c_matrix
+
     def display_confusion_matrix(self, confusion_matrix):
         plt.rc("font", size=14)
         sns.set(style="white")
@@ -30,3 +45,7 @@ class RainPredictor:
         plt.ylabel('True label')
         plt.xlabel('Predicted label')
         plt.show()
+
+    def get_rain_prediction(self, logistic, x_test):
+        predict = logistic.predict(x_test)
+        return predict
