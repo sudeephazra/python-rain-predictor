@@ -10,12 +10,12 @@ def test_rain_predictor_file_read():
     dataframe = rain_predictor.rename_columns(dataframe, ['isRain', 'temperature', 'humidity'])
     dataframe = rain_predictor.replace_data_regex(dataframe, 'isRain', re.compile('^.*(RA|SN|DN|PL).*$'), 'Yes')
     dataframe = rain_predictor.replace_data_regex(dataframe, 'isRain', re.compile('^(?!.*Yes).*$'), 'No')
+    # Display the unique list of test data of probable predicted values
     # sns.countplot(y=dataframe['isRain'], data=dataframe)
     # plt.show()
     (logistic, x_test, y_test) = rain_predictor.prediction_logic(dataframe[['humidity']+['temperature']], dataframe[['isRain']])
+    # Display the confusion matrix
     # c_matrix = rain_predictor.get_confusion_matrix(logistic, x_test, y_test)
     # rain_predictor.display_confusion_matrix(c_matrix)
     print(rain_predictor.get_rain_prediction(logistic, [[24.4, 90]]))
 
-
-test_rain_predictor_file_read()
