@@ -20,7 +20,7 @@ class RainPredictor:
         data_frame.columns = column_names
         return data_frame
 
-    def replace_data_regex(self, data_frame, column_name, old_string, new_string):
+    def replace_data(self, data_frame, column_name, old_string, new_string):
         data_frame[column_name].replace(to_replace=old_string, value=new_string, regex=True, inplace=True)
         return data_frame
 
