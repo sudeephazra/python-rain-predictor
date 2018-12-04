@@ -4,13 +4,26 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import confusion_matrix
+import os
 
-
+#
+# Initialize the model
+# check if the model is already trained and saved
+# if yes, load the trained model, else train th model from the data file provided
+# display the predicted value accordingly
+#
 class RainPredictor:
 
     def __init__(self, file):
         self.data_file = file
         pandas.options.mode.chained_assignment = None
+
+    # Check if the model is already trained
+    # This is done by checking the existence of the saved model file
+    def is_model_trained(self, file_path):
+        # if trained file exists that means model is trained
+        os.path.isfile(file_path)
+        pass
 
     def read_file(self, column_indices, headers=0):
         data_frame = pandas.read_csv(self.data_file, header=headers, usecols=column_indices) # column_indices should default to all columns
@@ -23,6 +36,9 @@ class RainPredictor:
     def replace_data(self, data_frame, column_name, old_string, new_string):
         data_frame[column_name].replace(to_replace=old_string, value=new_string, regex=True, inplace=True)
         return data_frame
+
+    def train_model(self):
+        pass
 
     def prediction_logic(self, x_dataframe, y_dataframe):
         x_train, x_test, y_train, y_test = train_test_split(x_dataframe,
