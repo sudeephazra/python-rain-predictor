@@ -5,6 +5,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import confusion_matrix
 import os
+from joblib import dump, load
 
 #
 # Initialize the model
@@ -18,12 +19,22 @@ class RainPredictor:
         self.data_file = file
         pandas.options.mode.chained_assignment = None
 
+    def get_home_folder(self):
+        home_folder = os.path.expanduser('~')
+        return home_folder
+
+    def get_trained_file(self):
+        trained_file = os.path.join(self.get_home_folder(), "LogisticRegression.mdl")
+        return trained_file
+
     # Check if the model is already trained
     # This is done by checking the existence of the saved model file
-    def is_model_trained(self, file_path):
+    def is_model_trained(self):
         # if trained file exists that means model is trained
-        os.path.isfile(file_path)
-        pass
+        if os.path.isfile(self.get_trained_file()) is True:
+            return True
+        else:
+            return False
 
     def read_file(self, column_indices, headers=0):
         data_frame = pandas.read_csv(self.data_file, header=headers, usecols=column_indices) # column_indices should default to all columns
@@ -37,15 +48,26 @@ class RainPredictor:
         data_frame[column_name].replace(to_replace=old_string, value=new_string, regex=True, inplace=True)
         return data_frame
 
-    def train_model(self):
-        pass
-
-    def prediction_logic(self, x_dataframe, y_dataframe):
+    def train_model(self, x_dataframe, y_dataframe):
         x_train, x_test, y_train, y_test = train_test_split(x_dataframe,
                                                             y_dataframe, random_state=0, test_size=0.25)
         logistic = LogisticRegression(solver='lbfgs')
         logistic.fit(x_train, y_train.values.ravel())
+        self.save_trained_model(logistic)
         return logistic, x_test, y_test
+
+    def prediction_logic(self, x_dataframe, y_dataframe):
+        if self.is_model_trained() is True:
+            dataframe = load("LogisticRegression.mdl")
+        else:
+            self.train_model(x_dataframe, y_dataframe)
+
+
+
+
+    def save_trained_model(self, logistic):
+        dump(logistic, self.get_trained_file())
+
 
     def get_confusion_matrix(self, logistic, x_test, y_test):
         predict = logistic.predict(x_test)
