@@ -35,7 +35,8 @@ class RainPredictor:
 
     # Get the HOME folder of the current logged in user.
     # This returns a platform independent location of the HOME folder
-    def get_home_folder(self):
+    @staticmethod
+    def get_home_folder():
         home_folder = os.path.expanduser('~')
         return home_folder
 
@@ -74,11 +75,13 @@ class RainPredictor:
         data_frame = pandas.read_csv(data_file, header=headers, usecols=column_indices)
         return data_frame
 
-    def rename_columns(self, data_frame, column_names):
+    @staticmethod
+    def rename_columns(data_frame, column_names):
         data_frame.columns = column_names
         return data_frame
 
-    def replace_data(self, data_frame, column_name, old_string, new_string):
+    @staticmethod
+    def replace_data(data_frame, column_name, old_string, new_string):
         data_frame[column_name].replace(to_replace=old_string, value=new_string, regex=True, inplace=True)
         return data_frame
 
@@ -97,12 +100,14 @@ class RainPredictor:
         self.save_trained_model(logistic)
         return logistic, x_test, y_test
 
-    def get_confusion_matrix(self, logistic, x_test, y_test):
+    @staticmethod
+    def get_confusion_matrix(logistic, x_test, y_test):
         predict = logistic.predict(x_test)
         c_matrix = confusion_matrix(y_test, predict)
         return c_matrix
 
-    def display_confusion_matrix(self, confusion_matrix):
+    @staticmethod
+    def display_confusion_matrix(confusion_matrix):
         plt.rc("font", size=14)
         sns.set(style="white")
         sns.set(style="whitegrid", color_codes=True)
@@ -112,6 +117,7 @@ class RainPredictor:
         plt.xlabel('Predicted label')
         plt.show()
 
-    def get_rain_prediction(self, logistic, x_test):
+    @staticmethod
+    def get_rain_prediction(logistic, x_test):
         predict = logistic.predict(x_test)
         return predict
