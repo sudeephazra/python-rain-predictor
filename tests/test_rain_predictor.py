@@ -4,25 +4,9 @@ import matplotlib.pyplot as plt
 import re
 
 
-# def test_rain_predictor_file_read():
-#     rain_predictor = RainPredictor.RainPredictor('../data/Weather Dataset_Filtered.csv')
-#     dataframe = rain_predictor.read_file(column_indices=[8, 10, 14, 15])
-#     dataframe = rain_predictor.rename_columns(dataframe, ['isRain', 'temperature', 'DewPointCelsius', 'humidity'])
-#     dataframe = rain_predictor.replace_data(dataframe, 'isRain', re.compile('^.*(RA|SN|DN|PL).*$'), 'Yes')
-#     dataframe = rain_predictor.replace_data(dataframe, 'isRain', re.compile('^(?!.*Yes).*$'), 'No')
-#     # # Display the unique list of test data of probable predicted values
-#     # # sns.countplot(y=dataframe['windspeed'], data=dataframe)
-#     # # plt.show()
-#     (logistic, x_test, y_test) = rain_predictor.prediction_logic(dataframe[['humidity']+['temperature']+['DewPointCelsius']], dataframe[['isRain']])
-#     # # Display the confusion matrix
-#     # # c_matrix = rain_predictor.get_confusion_matrix(logistic, x_test, y_test)
-#     # # rain_predictor.display_confusion_matrix(c_matrix)
-#     print(rain_predictor.get_rain_prediction(logistic, [[25, 10, 80]]))
-
-
 def test_rain_logistic_regression():
     rain_predictor = RainPredictor.RainPredictor()
-    rain_predictor.forget_training()
+    rain_predictor.forget_training()  # This will train the model on each execution
     if rain_predictor.get_model_trained_status() is False:
         print("Training...")
         data_frame = rain_predictor.read_training_data_set(column_indices=[8, 10, 15])
@@ -46,7 +30,7 @@ def test_rain_logistic_regression():
 
 def test_rain_naive_bayes():
     rain_predictor = RainPredictor.RainPredictor()
-    rain_predictor.forget_training()
+    rain_predictor.forget_training()  # This will train the model on each execution
     if rain_predictor.get_model_trained_status() is False:
         print("Training...")
         data_frame = rain_predictor.read_training_data_set(column_indices=[8, 10, 15])
