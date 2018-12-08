@@ -3,6 +3,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
+from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import confusion_matrix
 import os
 from joblib import dump, load
@@ -16,7 +17,7 @@ from joblib import dump, load
 #
 class RainPredictor:
 
-    _model = 'LogisticRegression.mdl'
+    _model = 'RainPredictor.mdl'
     _training_data_set = '../data/Weather Dataset_Filtered.csv'
     # _training_data_set = '../data/sample.csv'
 
@@ -90,15 +91,23 @@ class RainPredictor:
         if self.is_model_trained() is True:
             dataframe = self.load_trained_model()
         else:
-            self.train_model(x_dataframe, y_dataframe)
+            self.train_model_logistic_regression(x_dataframe, y_dataframe)
 
-    def train_model(self, x_dataframe, y_dataframe):
+    def train_model_logistic_regression(self, x_dataframe, y_dataframe):
         x_train, x_test, y_train, y_test = train_test_split(x_dataframe,
                                                             y_dataframe, random_state=0, test_size=0.25)
         logistic = LogisticRegression(solver='lbfgs')
         logistic.fit(x_train, y_train.values.ravel())
         self.save_trained_model(logistic)
         return logistic, x_test, y_test
+
+    def train_model_naive_bayes(self, x_dataframe, y_dataframe):
+        x_train, x_test, y_train, y_test = train_test_split(x_dataframe,
+                                                            y_dataframe, random_state=0, test_size=0.25)
+        gaussian = GaussianNB()
+        gaussian.fit(x_train, y_train.values.ravel())
+        self.save_trained_model(gaussian)
+        return gaussian, x_test, y_test
 
     @staticmethod
     def get_confusion_matrix(logistic, x_test, y_test):
