@@ -129,4 +129,12 @@ class RainPredictor:
     @staticmethod
     def get_rain_prediction(logistic, x_test):
         predict = logistic.predict(x_test)
-        return predict
+        return predict.item(0)
+
+    @staticmethod
+    def get_rain_prediction_accuracy(logistic, x_test):
+        predict = logistic.predict_proba(x_test)
+        if predict.item(0) > predict.item(1):
+            return predict.item(0)
+        else:
+            return predict.item(1)
